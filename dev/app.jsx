@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Menu from "./menu.jsx";
-import List from "./list.jsx";
+import Menu from "./app/menu.jsx";
+import List from "./app/list.jsx";
 
 class App extends React.Component {
     constructor() {
@@ -20,10 +20,22 @@ class App extends React.Component {
         this.setState( (prevState, props) => {
             let itemsList = prevState.itemsList;
             itemsList.push({"txt": item, done: false});
-            return {
-                itemsList
-            }
+            return { itemsList }
         })
+    }
+    deleteItem(i) {
+        if (i > this.state.itemsList.length-1) {
+            return;
+        } else {
+            this.setState(
+                (prevState, props) => {
+                    let itemsList = prevState.itemsList;
+                    itemsList.splice(i, 1);
+                    return { itemsList }
+                }
+            )
+        }
+
     }
 
     clearItemsList() {
@@ -58,9 +70,10 @@ class App extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="app" >
+                <h1 className="app-title" >To Do List</h1>
                 <Menu addItem={ this.addItem.bind(this) } clearItemsList={ this.clearItemsList.bind(this) } />
-                <List items={ this.getItems.bind(this) } toggleStatus={ this.toggleStatus.bind(this) } />
+                <List items={ this.getItems.bind(this) } toggleStatus={ this.toggleStatus.bind(this) } deleteItem={ this.deleteItem.bind(this) } />
             </div>
         );
     }

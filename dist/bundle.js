@@ -9473,8 +9473,13 @@ var List = function (_React$Component) {
     _createClass(List, [{
         key: 'handleClick',
         value: function handleClick(i) {
-            console.log('lista');
             this.props.toggleStatus(i);
+        }
+    }, {
+        key: 'handleDelete',
+        value: function handleDelete(i, e) {
+            e.stopPropagation();
+            this.props.deleteItem(i);
         }
     }, {
         key: 'render',
@@ -9485,13 +9490,21 @@ var List = function (_React$Component) {
             var list = itemsArray.map(function (item, i) {
                 return _react2.default.createElement(
                     'li',
-                    { className: item.done ? 'done' : '', key: "item" + i.toString(), onClick: _this2.handleClick.bind(_this2, i) },
-                    item.txt
+                    { className: "app-list-item" + (item.done ? ' done' : ''),
+                        key: "item" + i.toString(),
+                        onClick: _this2.handleClick.bind(_this2, i)
+                    },
+                    item.txt,
+                    _react2.default.createElement(
+                        'button',
+                        { onClick: _this2.handleDelete.bind(_this2, i) },
+                        '\uD83D\uDDD1\uFE0F'
+                    )
                 );
             });
             return _react2.default.createElement(
                 'ul',
-                null,
+                { className: 'app-list' },
                 list
             );
         }
@@ -9615,10 +9628,10 @@ var Input = function (_React$Component) {
             }
             return _react2.default.createElement(
                 "div",
-                null,
+                { className: "app=menu" },
                 _react2.default.createElement(
                     "div",
-                    null,
+                    { className: "app-input-label" },
                     _react2.default.createElement(
                         "label",
                         { htmlFor: this.props.id },
@@ -9627,8 +9640,8 @@ var Input = function (_React$Component) {
                 ),
                 _react2.default.createElement(
                     "div",
-                    null,
-                    _react2.default.createElement("input", { id: this.props.id, onKeyPress: handleKeyPress }),
+                    { className: "app-input" },
+                    _react2.default.createElement("input", { id: this.props.id, onKeyPress: handleKeyPress, placeholder: "Item" }),
                     _react2.default.createElement(
                         "button",
                         { onClick: handleClick },
@@ -9637,7 +9650,7 @@ var Input = function (_React$Component) {
                     _react2.default.createElement(
                         "button",
                         { onClick: this.props.clearItemsList },
-                        "X"
+                        "Clear"
                     )
                 )
             );
@@ -21938,10 +21951,21 @@ var App = function (_React$Component) {
             this.setState(function (prevState, props) {
                 var itemsList = prevState.itemsList;
                 itemsList.push({ "txt": item, done: false });
-                return {
-                    itemsList: itemsList
-                };
+                return { itemsList: itemsList };
             });
+        }
+    }, {
+        key: "deleteItem",
+        value: function deleteItem(i) {
+            if (i > this.state.itemsList.length - 1) {
+                return;
+            } else {
+                this.setState(function (prevState, props) {
+                    var itemsList = prevState.itemsList;
+                    itemsList.splice(i, 1);
+                    return { itemsList: itemsList };
+                });
+            }
         }
     }, {
         key: "clearItemsList",
@@ -21983,9 +22007,14 @@ var App = function (_React$Component) {
         value: function render() {
             return _react2.default.createElement(
                 "div",
-                null,
+                { className: "app" },
+                _react2.default.createElement(
+                    "h1",
+                    { className: "app-title" },
+                    "To Do List"
+                ),
                 _react2.default.createElement(_menu2.default, { addItem: this.addItem.bind(this), clearItemsList: this.clearItemsList.bind(this) }),
-                _react2.default.createElement(_list2.default, { items: this.getItems.bind(this), toggleStatus: this.toggleStatus.bind(this) })
+                _react2.default.createElement(_list2.default, { items: this.getItems.bind(this), toggleStatus: this.toggleStatus.bind(this), deleteItem: this.deleteItem.bind(this) })
             );
         }
     }]);
